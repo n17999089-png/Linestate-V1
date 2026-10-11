@@ -397,6 +397,68 @@ body[data-dev="phone"] #panel input,body[data-dev="phone"] #panel label{touch-ac
 @keyframes blobD{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-30vmax,18vmax) scale(1.2)}}
 body[data-dev="phone"] #menuAnim{display:none}
 #menu .mcard,#menu .mcard *{position:relative;z-index:3}
+/* ---------- фон меню: карта видна (раніше її перекривав режим змішування) ---------- */
+#menuBg{opacity:.6!important;filter:grayscale(.85) contrast(1.1) brightness(.8)!important;mix-blend-mode:normal!important;transform:none!important}
+#menu{background:#060606!important}
+#menuShade{background:radial-gradient(ellipse at center,rgba(0,0,0,0) 35%,rgba(0,0,0,.6) 100%)!important}
+/* ---------- підписи головних міст: чорна тінь як на тексті, без червоного/синього ---------- */
+.clab:not(.vil){filter:drop-shadow(3px 3px 0 #000) drop-shadow(-1px -1px 0 #000) drop-shadow(0 0 8px rgba(0,0,0,.95))!important;font-size:inherit}
+.clab.vil{filter:drop-shadow(2px 2px 0 #000) drop-shadow(0 0 5px rgba(0,0,0,.9))}
+/* ---------- підписи столиць як назви держав, з анімованим прапором ---------- */
+.zlab.cap{font-size:13px;color:#fff;display:flex;align-items:center;gap:8px;text-shadow:none!important}
+.zlab.cap small{font-size:.65em;color:#ffffffcc;margin-top:3px;text-align:left}
+.cflagw{display:inline-block;width:26px;height:18px;border-radius:2px;overflow:hidden;box-shadow:0 0 0 1px rgba(255,255,255,.5),0 3px 6px rgba(0,0,0,.6);transform-origin:left center;animation:capWave 2.6s ease-in-out infinite}
+.cflagw svg{display:block;width:100%;height:100%}
+@keyframes capWave{0%,100%{transform:skewY(-3deg) scaleY(1)}50%{transform:skewY(3deg) scaleY(1.06)}}
+/* ---------- головне меню: чорно-білий градієнт, без кольорових світінь ---------- */
+#menuAnim{display:none!important}
+#menu{background:linear-gradient(135deg,#000 0%,#1a1a1a 35%,#7a7a7a 70%,#f2f2f2 100%)!important;background-size:300% 300%!important;animation:bwGradF 16s ease infinite!important}
+@keyframes bwGradF{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+#menuBg{opacity:.5!important;filter:grayscale(1) contrast(1.15) brightness(.85)!important}
+/* ---------- флаги: більші, без флагштока, з м'яким світлом ---------- */
+#menu .mflags{gap:30px!important}
+#menu .mflag{width:150px!important;height:100px!important;border-radius:10px!important;background:#111!important;box-shadow:0 14px 26px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.18)!important}
+#menu .mflag svg{display:block;width:100%;height:100%;filter:drop-shadow(0 6px 8px rgba(0,0,0,.6))}
+#menu .mflag .fold{opacity:.45}
+#menu .mflag .gloss{opacity:.8}
+/* ---------- задній фон меню: глибокий чорно-білий градієнт зі світловим акцентом ---------- */
+#menu{background:radial-gradient(ellipse at 28% 18%,rgba(255,255,255,.14),transparent 55%),linear-gradient(135deg,#000 0%,#161616 32%,#6e6e6e 68%,#e9e9e9 100%)!important;background-size:auto,300% 300%!important;animation:bwGradF 22s ease infinite!important}
+/* ---------- столиці: біла тінь і чорне видавлювання, як у текстів ---------- */
+.leaflet-xreg-pane path.capedge{filter:drop-shadow(0 0 3px rgba(255,255,255,.95)) drop-shadow(3px 4px 0 #000) drop-shadow(5px 7px 0 #000)}
+/* ---------- вибір мови з прапорами ---------- */
+.lbtn{display:flex!important;align-items:center;gap:12px;justify-content:flex-start!important;padding-left:14px!important}
+.lflag{display:inline-block;width:34px;height:23px;border-radius:3px;overflow:hidden;box-shadow:0 0 0 1px rgba(255,255,255,.35),0 4px 8px rgba(0,0,0,.6);flex:none}
+.lflag svg{display:block;width:100%;height:100%}
+.lbtn:hover .lflag{transform:scale(1.08)}
+.lflag{transition:transform .2s}
+/* ---------- плавні переходи налаштувань ---------- */
+#settings{opacity:0;transition:opacity .3s ease}
+#settings.open{opacity:1}
+#settings .scard{transform:translateY(18px) scale(.94);transition:transform .38s cubic-bezier(.2,.9,.3,1.1)}
+#settings.open .scard{transform:none}
+/* прапор у кнопці мови: не успадковує стилі іконок кнопок */
+.lflag svg{stroke:none!important;fill:none!important;stroke-width:0!important;width:100%!important;height:100%!important}
+.lflag svg rect{stroke:none}
+/* ---------- меню вибору мови: той самий фон, що й головне меню ---------- */
+#lang{background:radial-gradient(ellipse at 28% 18%,rgba(255,255,255,.14),transparent 55%),linear-gradient(135deg,#000 0%,#161616 32%,#6e6e6e 68%,#e9e9e9 100%)!important;background-size:auto,300% 300%!important;animation:bwGradF 22s ease infinite}
+#lang .starfx,#menu .starfx{position:fixed;inset:0;pointer-events:none;z-index:1}
+#lang .lcard{position:relative;z-index:3}
+/* ---------- анімація тексту ---------- */
+.mtitle,.lcard h2{animation:titleSweep 7s linear infinite,titleBreath 3.6s ease-in-out infinite}
+@keyframes titleBreath{0%,100%{letter-spacing:0}50%{letter-spacing:1.5px}}
+.lcard p,.mcard p{animation:fadeUp .9s .2s both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+/* ---------- кнопки: глянець і світлова хвиля при наведенні ---------- */
+.b3d{position:relative;overflow:hidden}
+.b3d::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.35) 50%,transparent 65%);transform:translateX(-120%);transition:transform .6s ease;pointer-events:none}
+.b3d:hover::after{transform:translateX(120%)}
+.lbtn{transition:transform .25s cubic-bezier(.2,.9,.3,1.1),box-shadow .25s,filter .25s}
+.lbtn:hover{transform:translateY(-2px) scale(1.01);filter:brightness(1.15)}
+/* ---------- області: тінь-паралель тонша ---------- */
+.olab{text-shadow:1px 1px 0 #000,0 0 6px rgba(0,0,0,.85)!important}
+/* ---------- кнопка скриншота: спалах при знімку ---------- */
+#shotFlash{position:fixed;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:6000;transition:opacity .35s ease}
+#shotFlash.on{opacity:.85;transition:none}
 </style>
 </head>
 <body class="inmenu">
@@ -419,6 +481,9 @@ body[data-dev="phone"] #menuAnim{display:none}
 <div class="srow"><span>Сіра зона</span><input type="color" id="colFight" value="#6b7280"></div>
 <div class="srow"><span>Беларусь</span><input type="color" id="colBy" value="#16a34a"></div>
 <div class="srow"><span>Скинути кольори</span><button class="b3d sm" id="colReset">Скинути</button></div>
+<div class="ssec">ПРОЗОРІСТЬ</div>
+<div class="srow"><span>Зони</span><input type="range" id="zoneOp" min="20" max="100" value="85"></div>
+<div class="srow"><span>Рельєф</span><input type="range" id="reliefOp" min="0" max="100" value="85"></div>
 <div class="ssec">ЗВУК І ЕФЕКТИ</div>
 <label class="srow chk2"><span>Звуки кліків</span><input type="checkbox" id="chkSnd" checked></label>
 <div class="srow"><span>Гучність</span><input type="range" id="volS" min="0" max="100" value="60"></div>
@@ -430,8 +495,9 @@ body[data-dev="phone"] #menuAnim{display:none}
 <button class="b3d full" id="setClose" style="margin-top:14px">Закрити</button>
 </div></div>
 
+<div id="shotFlash"></div>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><pattern id="hatch" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><animate attributeName="patternTransform" values="rotate(45) translate(0 0);rotate(45) translate(10 0)" dur="1.4s" repeatCount="indefinite"/><rect width="10" height="10" fill="#374151"/><rect width="4.5" height="10" fill="#c7ced9"/></pattern></defs></svg>
-<div id="busy"><i></i>ОБЧИСЛЕННЯ…</div><div id="intro"><div class="itype"><span id="iline1"></span><br><span id="iline2"></span><i class="icur"></i></div></div><div id="lang" hidden><div class="lcard"><h2>LINESTATE</h2><p>LANGUAGE · ЯЗЫК · МОВА</p><div class="lgrid"><button class="b3d" data-lang="uk">УКРАЇНСЬКА</button><button class="b3d" data-lang="ru">РУССКИЙ</button><button class="b3d" data-lang="en">ENGLISH</button></div></div></div><div id="sheen"></div>
+<div id="busy"><i></i>ОБЧИСЛЕННЯ…</div><div id="intro"><div class="itype"><span id="iline1"></span><br><span id="iline2"></span><i class="icur"></i></div></div><div id="lang" hidden><div class="lcard"><h2>LINESTATE</h2><p>LANGUAGE · ЯЗЫК · МОВА</p><div class="lgrid"><button class="b3d lbtn" data-lang="uk"><span class="lflag"><svg viewBox="0 0 3 2"><rect width="3" height="1" fill="#0057b7"/><rect y="1" width="3" height="1" fill="#ffd700"/></svg></span>УКРАЇНСЬКА</button><button class="b3d lbtn" data-lang="ru"><span class="lflag"><svg viewBox="0 0 3 2"><rect width="3" height="0.67" fill="#fff"/><rect y="0.67" width="3" height="0.67" fill="#0039a6"/><rect y="1.34" width="3" height="0.66" fill="#d52b1e"/></svg></span>РУССКИЙ</button><button class="b3d lbtn" data-lang="en"><span class="lflag"><svg viewBox="0 0 60 30" preserveAspectRatio="none"><rect width="60" height="30" fill="#012169"/><path d="M0 0L60 30M60 0L0 30" stroke="#fff" stroke-width="6"/><path d="M0 0L60 30M60 0L0 30" stroke="#C8102E" stroke-width="2.5"/><path d="M30 0V30M0 15H60" stroke="#fff" stroke-width="10"/><path d="M30 0V30M0 15H60" stroke="#C8102E" stroke-width="6"/></svg></span>ENGLISH</button></div></div></div><div id="sheen"></div>
 
 <div id="menu" style="display:none">
   <div id="menuBg"></div>
@@ -471,7 +537,7 @@ body[data-dev="phone"] #menuAnim{display:none}
   <div class="grid">
     
     <button class="b3d" data-mode="free"></button>
-    <button class="b3d" data-mode="paint"></button>
+    
     <button class="b3d" data-mode="erase"></button>
     <button class="b3d full" data-mode="pan"></button>
   </div>
@@ -545,7 +611,7 @@ const RF_GEOJSON = {"type":"FeatureCollection","features":[{"type":"Feature","id
 <script>
 // ===== движок оригиналу (дословно из frontlinemap3_upd6_5_3_fixed.html) =====
 // ==== ORIGINAL: zStyle ====
-const zStyle = s => ({ stroke: false, fillColor: s === 'fight' ? 'url(#hatch)' : prop(s).color, fillOpacity: s === 'fight' ? 0.85 : 0.8 });
+const zStyle = s => (s === 'fight' ? { stroke: false, fillColor: 'url(#hatch)', fillOpacity: Math.min(1, SET.zoneOpacity + 0.08) } : (s === 'occ' || s === 'free' || s === 'green') ? { stroke: true, color: darkenHex(prop(s).color, 0.42), weight: 2.6, opacity: 0.95, lineJoin: 'round', fillColor: prop(s).color, fillOpacity: SET.zoneOpacity } : { stroke: false, fillColor: prop(s).color, fillOpacity: SET.zoneOpacity });
 // ==== ORIGINAL: helpers ====
 // ---------- Надійні геометричні операції ----------
 // turf/polygon-clipping інколи кидає помилку на «брудній» геометрії (самоперетини, майже збіжні вузли). Одна така помилка раніше
@@ -1034,7 +1100,7 @@ const esri = (svc, nz, o) => L.tileLayer(ES + svc + '/MapServer/tile/{z}/{y}/{x}
 const UA_BOUNDS = [[44.0, 22.0], [52.6, 40.4]];
 const map = L.map('map', { zoomControl: false, doubleClickZoom: false, boxZoom: false, maxZoom: 19, minZoom: 5,
   maxBounds: [[42.0, 19.0], [54.5, 43.5]], maxBoundsViscosity: 0.9,
-  zoomSnap: 0.25, zoomDelta: 0.5, wheelPxPerZoomLevel: 160, wheelDebounceTime: 60, zoomAnimationThreshold: 8 })
+  zoomSnap: 0.1, zoomDelta: 0.5, wheelPxPerZoomLevel: 110, wheelDebounceTime: 40, zoomAnimationThreshold: 14, fadeAnimation: true, markerZoomAnimation: true })
   .setView([48.6, 32.2], 6);
 L.control.zoom({ position: 'bottomright' }).addTo(map);
 
@@ -1166,11 +1232,18 @@ function villColor(st) {
   if (st === 'free' || st === 'green') return lightenHex(C.free, 0.5);
   return '#e9f3ff';
 }
+function darkenHex(hex, k) {
+  const n = parseInt(String(hex).slice(1), 16);
+  if (isNaN(n)) return '#000000';
+  const c = [n >> 16 & 255, n >> 8 & 255, n & 255].map(v => Math.round(v * (1 - k)));
+  return '#' + c.map(v => v.toString(16).padStart(2, '0')).join('');
+}
+// колір підпису міста = колір сторони, що його контролює (як у території)
 function cityColorFor(name, lng, lat) {
-  const s = cityState[name];
-  if (s === 'taken') return lightenHex(C.occ, 0.5);
-  if (s === 'contested') return '#ffb347';
-  return cityColor(vStatus(lng, lat));
+  const st = vStatus(lng, lat);
+  if (st === 'occ') return C.occ;
+  if (st === 'free' || st === 'green') return C.free;
+  return '#f5f5f5';
 }
 function cityColor(st) {
   if (st === 'occ') return lightenHex(C.occ, 0.5);
@@ -1704,6 +1777,9 @@ const DICT = {
   'Сховати панель (H)': { ru: 'Скрыть панель (H)', en: 'Hide panel (H)' },
   'Показати панель (H)': { ru: 'Показать панель (H)', en: 'Show panel (H)' },
   'Нова зона: ': { ru: 'Новая зона: ', en: 'New zone: ' },
+  'ПРОЗОРІСТЬ': { ru: 'ПРОЗРАЧНОСТЬ', en: 'OPACITY' },
+  'Зони': { ru: 'Зоны', en: 'Zones' },
+  'Рельєф': { ru: 'Рельеф', en: 'Relief' },
   'Зробити скриншот': { ru: 'Сделать скриншот', en: 'Take screenshot' },
   'Скриншот збережено': { ru: 'Скриншот сохранён', en: 'Screenshot saved' },
   'Не вдалося зробити скриншот': { ru: 'Не удалось сделать скриншот', en: 'Could not take screenshot' },
@@ -1859,7 +1935,7 @@ function renderAnim(now) {
 document.querySelectorAll('[data-lang]').forEach(b => b.onclick = () => {
   LANG = b.dataset.lang;
   $('lang').classList.add('gone');
-  setTimeout(() => { $('lang').hidden = true; $('menu').style.display = 'flex'; applyLang(); }, 500);
+  setTimeout(() => { $('lang').hidden = true; $('menu').style.display = 'flex'; applyLang(); menuMap.invalidateSize(); setTimeout(() => menuMap.invalidateSize(), 300); }, 500);
 });
 
 // ---------- території: назви областей ----------
@@ -1897,8 +1973,7 @@ function setPerf(p) {
   clearCityMarkers(); renderCities();
 }
 $('mAlt').onclick = () => leaveMenu('alt');
-$('setBtn').onclick = () => { $('settings').hidden = false; };
-$('setClose').onclick = () => { $('settings').hidden = true; };
+
 document.querySelectorAll('[data-setlang]').forEach(b => b.onclick = () => {
   LANG = b.dataset.setlang;
   document.querySelectorAll('[data-setlang]').forEach(x => x.classList.toggle('on', x.dataset.setlang === LANG));
@@ -1916,7 +1991,7 @@ const _applyLang2 = applyLang;
 applyLang = function () { _applyLang2(); clearCityMarkers(); renderCities(); };
 
 // ---------- звуки: синтез WebAudio (без файлів), з фільтрами та шумом ----------
-const SET = { sound: true, vol: 0.6, colorFree: '#2563eb', colorOcc: '#dc2626', colorFight: '#6b7280', colorBy: '#16a34a', arrows: true, grid: true, fx: true };
+const SET = { sound: true, vol: 0.6, colorFree: '#2563eb', colorOcc: '#dc2626', colorFight: '#6b7280', colorBy: '#16a34a', arrows: true, grid: true, fx: true, zoneOpacity: 0.9, reliefOpacity: 0.85 };
 try { Object.assign(SET, JSON.parse(localStorage.getItem('fl_settings') || '{}')); } catch (e) {}
 let AC = null, NOISE = null;
 function ac() {
@@ -1993,7 +2068,7 @@ function applySideColors() {
   C.free = SET.colorFree; C.occ = SET.colorOcc; C.fight = SET.colorFight; C.by = SET.colorBy;
   ST.free.color = SET.colorFree; ST.green.color = SET.colorFree;
   ST.occ.color = SET.colorOcc; ST.rf.color = SET.colorOcc; ST.fight.color = SET.colorFight; ST.by.color = SET.colorBy;
-  zones.forEach(z => { if (z.layer) z.layer.eachLayer(p => p.setStyle({ fillColor: prop(z.status).color })); });
+  zones.forEach(z => { if (z.layer) z.layer.eachLayer(p => p.setStyle({ fillColor: prop(z.status).color, color: darkenHex(prop(z.status).color, 0.42) })); });
   renderLabels(); renderStats();
   saveSettings();
 }
@@ -2044,6 +2119,104 @@ $('mCont').onclick = () => { $('menu').classList.add('leave'); setTimeout(() => 
 const _afterChange3 = afterChange;
 afterChange = function () { _afterChange3(); scheduleSave(); };
 window.addEventListener('beforeunload', saveGame);
+
+// ---------- прозорість зон і рельєфу: налаштовується в панелі «Налаштування» ----------
+$('zoneOp').value = Math.round(SET.zoneOpacity * 100);
+$('reliefOp').value = Math.round(SET.reliefOpacity * 100);
+function applyZoneOpacity() {
+  zones.forEach(z => { if (z.layer) z.layer.eachLayer(p => p.setStyle({ fillOpacity: z.status === 'fight' ? Math.min(1, SET.zoneOpacity + 0.08) : SET.zoneOpacity })); });
+}
+$('zoneOp').oninput = e => { SET.zoneOpacity = e.target.value / 100; applyZoneOpacity(); saveSettings(); };
+$('reliefOp').oninput = e => { SET.reliefOpacity = e.target.value / 100; HILL.setOpacity(SET.reliefOpacity); saveSettings(); };
+HILL.setOpacity(SET.reliefOpacity);
+
+// ---------- плавне відкриття і закриття налаштувань ----------
+function openSettings() {
+  const st = $('settings'); st.hidden = false;
+  requestAnimationFrame(() => requestAnimationFrame(() => st.classList.add('open')));
+}
+function closeSettings() {
+  const st = $('settings'); st.classList.remove('open');
+  setTimeout(() => { st.hidden = true; }, 320);
+}
+$('setBtn').onclick = openSettings;
+$('setClose').onclick = closeSettings;
+$('settings').addEventListener('click', e => { if (e.target.id === 'settings') closeSettings(); });
+
+// ---------- флаги на вітрі: об'ємні хвилі, тіні від складок, освітлення і текстура тканини ----------
+(function flagWave() {
+  const W = 150, H = 100, N = 30, SH = 72;          // ширина/висота полотна, сегменти хвилі, смуги світла/тіні
+  const flags = [
+    { el: document.querySelector('.mflag:nth-child(1)'), bands: [['#6fc0ff', '#0a5cc0'], ['#ffef7a', '#f0b400']], ph: 0 },
+    { el: document.querySelector('.mflag:nth-child(2)'), bands: [['#ffffff', '#d6d6d6'], ['#4a7fea', '#0a3aa0'], ['#ff7a62', '#b81c10']], ph: 1.7 }
+  ];
+  const wave = (x, t, ph) => {
+    const k = x / W, amp = 10 * Math.pow(k, 1.15) + 1.4;         // древко нерухоме, край гойдається сильніше
+    return amp * (Math.sin(x * 0.085 - t * 3.4 + ph) * 0.62 + Math.sin(x * 0.17 - t * 2.3 + ph * 0.5) * 0.28 + Math.sin(x * 0.03 - t * 1.1) * 0.22);
+  };
+  flags.forEach((f, fi) => {
+    if (!f.el) return;
+    const svg = f.el.querySelector('svg');
+    if (!svg) return;
+    let defs = '<defs>';
+    f.bands.forEach((c, i) => { defs += '<linearGradient id="fw' + fi + 'g' + i + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + c[0] + '"/><stop offset="1" stop-color="' + c[1] + '"/></linearGradient>'; });
+    defs += '<linearGradient id="fw' + fi + 'gl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity="0.38"/><stop offset="0.55" stop-color="#fff" stop-opacity="0.04"/><stop offset="1" stop-color="#000" stop-opacity="0.22"/></linearGradient>';
+    defs += '<filter id="fw' + fi + 'n" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="' + (fi + 3) + '" result="n"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="table" tableValues="0 0.18"/></feComponentTransfer></filter>';
+    defs += '<linearGradient id="fw' + fi + 'sh" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset="0.5" stop-color="#fff" stop-opacity="0.32"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>';
+    let html = defs;
+    f.bands.forEach((c, i) => { html += '<path data-b="' + i + '" fill="url(#fw' + fi + 'g' + i + ')"/>'; });
+    html += '<g data-shade="1"></g>';
+    html += '<path data-gl="1" fill="url(#fw' + fi + 'gl)"/>';
+    html += '<rect width="' + W + '" height="' + H + '" fill="#000" filter="url(#fw' + fi + 'n)" style="mix-blend-mode:overlay"/>';
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+    svg.setAttribute('preserveAspectRatio', 'none');
+    svg.innerHTML = html;
+    f.paths = Array.from(svg.querySelectorAll('path[data-b]'));
+    f.gl = svg.querySelector('path[data-gl]');
+    f.shadeG = svg.querySelector('g[data-shade]');
+    f.sheen = svg.appendChild(document.createElementNS('http://www.w3.org/2000/svg', 'rect'));
+    f.sheen.setAttribute('width', 48); f.sheen.setAttribute('height', H); f.sheen.setAttribute('fill', 'url(#fw' + fi + 'sh)');
+    f.sheen.style.mixBlendMode = 'screen';
+    f.bars = [];
+    for (let i = 0; i < SH; i++) {
+      const p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      f.shadeG.appendChild(p); f.bars.push(p);
+    }
+  });
+  const pathFrom = pts => pts.map((p, i) => (i ? 'L' : 'M') + p[0].toFixed(2) + ' ' + p[1].toFixed(2)).join(' ') + 'Z';
+  const edgePts = (y0, t, ph, rev) => {
+    const pts = [];
+    for (let i = 0; i <= N; i++) { const x = i / N * W; pts.push([x, y0 + wave(x, t, ph)]); }
+    return rev ? pts.reverse() : pts;
+  };
+  const start = performance.now();
+  const frame = now => {
+    requestAnimationFrame(frame);
+    const t = (now - start) / 1000;
+    flags.forEach(f => {
+      if (!f.paths) return;
+      const nb = f.bands.length, bh = H / nb;
+      f.paths.forEach((p, i) => {
+        const pts = edgePts(i * bh, t, f.ph, false).concat(edgePts((i + 1) * bh, t, f.ph, true));
+        p.setAttribute('d', pathFrom(pts));
+      });
+      // освітлення: нахил полотна в точці → світла або темна смуга (виглядає як складки тканини)
+      const bw = W / SH;
+      f.bars.forEach((p, i) => {
+        const x0 = i * bw, x1 = (i + 1) * bw, xm = (x0 + x1) / 2;
+        const slope = (wave(xm + 1, t, f.ph) - wave(xm - 1, t, f.ph)) / 2;
+        const top = [[x0, wave(x0, t, f.ph)], [x1, wave(x1, t, f.ph)]];
+        const bot = [[x1, H + wave(x1, t, f.ph)], [x0, H + wave(x0, t, f.ph)]];
+        p.setAttribute('d', pathFrom(top.concat(bot)));
+        const a = Math.min(0.38, Math.abs(slope) * 0.10);
+        p.setAttribute('fill', slope < 0 ? 'rgba(0,0,0,' + a.toFixed(3) + ')' : 'rgba(255,255,255,' + (a * 0.8).toFixed(3) + ')');
+      });
+      if (f.sheen) { const sx = ((t * 38 + f.ph * 40) % (W + 96)) - 48; f.sheen.setAttribute('x', sx.toFixed(1)); }
+      if (f.gl) f.gl.setAttribute('d', pathFrom(edgePts(0, t, f.ph, false).concat(edgePts(H * 0.45, t, f.ph, true))));
+    });
+  };
+  requestAnimationFrame(frame);
+})();
 
 // ---------- визначення пристрою: телефон / планшет / комп'ютер ----------
 const DEV = (() => {
@@ -2140,19 +2313,21 @@ if (DEV !== 'desktop') {
 const cityBoundLayer = L.layerGroup().addTo(map);
 let cbT = 0;
 function bigCityList() {
-  return CITIES.filter(c => c[3] === 1 && c[4] >= 100000).map(c => ({
+  return CITIES.filter(c => c[3] === 1 && c[4] >= 25000).map(c => ({
     name: c[0], lng: c[1], lat: c[2],
     r: Math.max(3, Math.min(12, 1.2 * Math.sqrt(c[4] / 50000)))
   }));
 }
 function updateCityBoundaries() {
   cityBoundLayer.clearLayers();
-  if (anims.length) return;
+  if (anims.length || map.getZoom() < 6) return;
+  const vb = map.getBounds().pad(0.2);
   const occ = zones.filter(z => z.status === 'occ');
   if (!occ.length) return;
   let U = occ[0].f;
   for (let i = 1; i < occ.length; i++) U = uni(U, occ[i].f) || U;
   BIG.forEach(city => {
+    if (!vb.contains([city.lat, city.lng])) return;
     try {
       const circ = turf.circle([city.lng, city.lat], city.r, { steps: 48, units: 'kilometers' });
       if (!turf.booleanIntersects(circ, U)) { cityState[city.name] = 'free'; return; }
@@ -2167,6 +2342,7 @@ function updateCityBoundaries() {
 }
 function scheduleCityBounds() { clearTimeout(cbT); cbT = setTimeout(updateCityBoundaries, 260); }
 const BIG = bigCityList();
+map.on('moveend zoomend', () => scheduleCityBounds());
 const _afterChange4 = afterChange;
 afterChange = function () { _afterChange4(); scheduleCityBounds(); };
 // знімок стану без сірої зони після кожної дії користувача (для точної перебудови сірої зони)
@@ -2189,7 +2365,8 @@ function addCapOutline(r, layer) {
   const ci = capInfo(r); const col = ci ? CAP_COLOR[ci.c] : '#ffffff';
   // світіння (широкий напівпрозорий контур) + чітка лінія держави
   L.geoJSON(r.g, { pane: 'xreg', interactive: false, style: { color: col, weight: 9, opacity: 0.16, fillOpacity: 0 } }).addTo(layer);
-  L.geoJSON(r.g, { pane: 'xreg', interactive: false, style: { color: col, weight: 2.4, opacity: 0.95, fillOpacity: 0 } }).addTo(layer);
+  const edge = L.geoJSON(r.g, { pane: 'xreg', interactive: false, style: { color: col, weight: 2.6, opacity: 1, fillOpacity: 0 } }).addTo(layer);
+  setTimeout(() => edge.eachLayer(p => p._path && p._path.classList.add('capedge')), 0);
 }
 function addCapLabel(r, layer) {
   try {
@@ -2197,8 +2374,10 @@ function addCapLabel(r, layer) {
     const col = CAP_COLOR[ci.c];
     const p = turf.centerOfMass(turf.feature(r.g)).geometry.coordinates;
     const name = ci[LANG] || ci.uk;
+    const word = { uk: 'СТОЛИЦЯ', ru: 'СТОЛИЦА', en: 'CAPITAL' }[LANG] || 'СТОЛИЦЯ';
+    const px = map.getZoom() >= 7 ? 16 : 13;
     L.marker([p[1], p[0]], { interactive: false, zIndexOffset: 500, icon: L.divIcon({ className: '', iconSize: null,
-      html: '<div class="caplab" style="border-color:' + col + ';box-shadow:0 0 14px ' + col + '66"><span class="cflagw">' + CAP_FLAG[ci.c] + '</span><span class="capn">' + name + '</span></div>' }) }).addTo(layer);
+      html: '<div class="zwrap"><div class="zlab cap" style="font-size:' + px + 'px;color:' + col + '"><span class="cflagw">' + CAP_FLAG[ci.c] + '</span><span>' + name + '<small>' + word + '</small></span></div></div>' }) }).addTo(layer);
   } catch (e) {}
 }
 // кнопка скриншота карти (правий верхній кут)
@@ -2215,9 +2394,13 @@ function loadH2C() {
 }
 $('shotBtn').onclick = async () => {
   Sfx.confirm();
+  const bz = $('busy'); bz.lastChild.textContent = 'СКРИНШОТ…'; bz.classList.add('show');
+  await new Promise(r => requestAnimationFrame(() => setTimeout(r, 60)));
   try {
     const h2c = await loadH2C();
-    const canvas = await h2c($('map'), { useCORS: true, backgroundColor: '#000000', scale: Math.min(2, window.devicePixelRatio || 1), logging: false });
+    const canvas = await h2c($('map'), { useCORS: true, backgroundColor: '#000000', scale: 1, logging: false });
+    bz.classList.remove('show');
+    const fl = $('shotFlash'); if (fl) { fl.classList.add('on'); setTimeout(() => fl.classList.remove('on'), 90); }
     canvas.toBlob(blob => {
       if (!blob) return toast('Не вдалося зробити скриншот');
       const a = document.createElement('a');
@@ -2226,7 +2409,7 @@ $('shotBtn').onclick = async () => {
       setTimeout(() => URL.revokeObjectURL(a.href), 3000);
       toast('Скриншот збережено');
     }, 'image/png');
-  } catch (e) { toast('Не вдалося зробити скриншот'); }
+  } catch (e) { bz.classList.remove('show'); toast('Не вдалося зробити скриншот'); }
 };
 
 // ---------- додаткові шари: НАТО, нейтральні країни, регіони Білорусі/РФ, Придністров'я, столиці ----------
@@ -2244,7 +2427,7 @@ EXTRA.neutral.forEach(c => L.geoJSON(c.g, { pane: 'xnato', interactive: false,
   style: { color: '#9ca3af', weight: 1, fillColor: '#6b7280', fillOpacity: 0.18 } }).addTo(neutLayer));
 const regStyle = kind => kind === 'cap'
   ? { color: '#ffffff', weight: 2.4, fillOpacity: 0 }
-  : kind === 'tr' ? { color: '#86efac', weight: 1.6, dashArray: '6 4', fillOpacity: 0 }
+  : kind === 'tr' ? { color: '#bbf7d0', weight: 2, fillColor: '#4ade80', fillOpacity: 0.32 }
   : kind === 'by' ? { color: '#bbf7d0', weight: 1.2, opacity: 0.8, fillOpacity: 0 }
   : { color: '#e5e7eb', weight: 1, opacity: 0.6, fillOpacity: 0 };
 EXTRA.regions.forEach(r => { if (r.kind === 'cap') addCapOutline(r, regLayer); else L.geoJSON(r.g, { pane: 'xreg', interactive: false, style: regStyle(r.kind) }).addTo(regLayer); });
@@ -2254,7 +2437,7 @@ function renderExtraLabels() {
   EXTRA.neutral.forEach(c => { if (z < 4) return; try { const p = turf.centerOfMass(turf.feature(c.g)).geometry.coordinates;
     L.marker([p[1], p[0]], { interactive: false, icon: L.divIcon({ className: '', iconSize: null, html: '<div class="olab nl">' + nm2(c.n) + '</div>' }) }).addTo(xLabelLayer); } catch (e) {} });
   EXTRA.regions.forEach(r => {
-    if (r.kind === 'cap') { if (z >= 5) addCapLabel(r, xLabelLayer); return; }
+    if (r.kind === 'cap') return;   // підписи столиць прибрано
     if (z < 6) return;
     try { const p = turf.centerOfMass(turf.feature(r.g)).geometry.coordinates;
       L.marker([p[1], p[0]], { interactive: false, icon: L.divIcon({ className: '', iconSize: null,
@@ -2307,45 +2490,54 @@ const _leaveMenuP = leaveMenu;
 leaveMenu = function (k) { _leaveMenuP(k); setTimeout(() => { document.body.classList.remove('inmenu'); updateChev(); }, 650); };
 $('mCont').addEventListener('click', () => setTimeout(() => { document.body.classList.remove('inmenu'); updateChev(); }, 700));
 
-// ---------- головне меню: дрейфуючі частинки і лінії зв'язку ----------
-(function menuParticles() {
-  const menu = document.getElementById('menu');
+// ---------- головне меню: зоряне поле — дрейф, мерехтіння, лінії зв'язку (на весь екран) ----------
+function attachStars(menu) {
   if (!menu) return;
   const cv = document.createElement('canvas');
-  cv.id = 'menuFx';
-  cv.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2';
+  cv.className = 'starfx';
+  cv.style.cssText = 'position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:2';
   menu.insertBefore(cv, menu.firstChild);
   const ctx = cv.getContext('2d');
   let W = 0, H = 0, pts = [];
-  const N = (DEV === 'phone') ? 0 : 56;   // на телефоні частинки вимкнено — менше навантаження
-  const size = () => {
+  const N = (DEV === 'phone') ? 45 : 95;
+  function size() {
     const d = Math.min(2, window.devicePixelRatio || 1);
-    W = cv.clientWidth; H = cv.clientHeight;
+    W = window.innerWidth; H = window.innerHeight;
     cv.width = W * d; cv.height = H * d; ctx.setTransform(d, 0, 0, d, 0, 0);
-    if (!pts.length) for (let i = 0; i < N; i++) pts.push({ x: Math.random() * W, y: Math.random() * H, vx: (Math.random() - 0.5) * 0.25, vy: (Math.random() - 0.5) * 0.25, r: 0.6 + Math.random() * 1.6, p: Math.random() * 6 });
-  };
+    if (!pts.length) for (let i = 0; i < N; i++) pts.push({
+      x: Math.random() * W, y: Math.random() * H,
+      vx: (Math.random() - 0.5) * 0.35, vy: (Math.random() - 0.5) * 0.35,
+      r: 0.7 + Math.random() * 1.8, p: Math.random() * 6.28, s: 0.02 + Math.random() * 0.03
+    });
+  }
   size(); window.addEventListener('resize', size);
   let last = 0;
   const frame = now => {
     requestAnimationFrame(frame);
     if (menu.style.display === 'none') return;
-    if (!W || !H) { size(); }                             // меню з'являється пізніше — перевіряємо розмір при показі
-    if (now - last < 33) return; last = now;             // ~30 к/с — легко для телефона
+    if (now - last < 33) return; last = now;
     ctx.clearRect(0, 0, W, H);
     pts.forEach(p => {
-      p.x += p.vx; p.y += p.vy; p.p += 0.03;
-      if (p.x < -5) p.x = W + 5; if (p.x > W + 5) p.x = -5;
-      if (p.y < -5) p.y = H + 5; if (p.y > H + 5) p.y = -5;
+      p.x += p.vx; p.y += p.vy; p.p += p.s;
+      if (p.x < -10) p.x = W + 10; if (p.x > W + 10) p.x = -10;
+      if (p.y < -10) p.y = H + 10; if (p.y > H + 10) p.y = -10;
     });
-    // лінії між близькими точками
     for (let i = 0; i < pts.length; i++) for (let j = i + 1; j < pts.length; j++) {
       const a = pts[i], b = pts[j], d = Math.hypot(a.x - b.x, a.y - b.y);
-      if (d < 110) { ctx.strokeStyle = 'rgba(255,255,255,' + (0.14 * (1 - d / 110)).toFixed(3) + ')'; ctx.lineWidth = 0.8; ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke(); }
+      if (d < 130) { ctx.strokeStyle = 'rgba(255,255,255,' + (0.22 * (1 - d / 130)).toFixed(3) + ')'; ctx.lineWidth = 0.9; ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke(); }
     }
-    pts.forEach(p => { ctx.fillStyle = 'rgba(255,255,255,' + (0.35 + 0.25 * Math.sin(p.p)).toFixed(3) + ')'; ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill(); });
+    pts.forEach(p => {
+      const tw = 0.55 + 0.45 * Math.sin(p.p);
+      ctx.fillStyle = 'rgba(255,255,255,' + (0.45 + 0.4 * tw).toFixed(3) + ')';
+      ctx.shadowColor = 'rgba(255,255,255,0.9)'; ctx.shadowBlur = 6 * tw;
+      ctx.beginPath(); ctx.arc(p.x, p.y, p.r * (0.8 + 0.3 * tw), 0, Math.PI * 2); ctx.fill();
+    });
+    ctx.shadowBlur = 0;
   };
   requestAnimationFrame(frame);
-})();
+}
+attachStars(document.getElementById('menu'));
+attachStars(document.getElementById('lang'));
 
 // ---------- стрілка для згортання панелі (ПК — вбік, телефон/планшет — шторка вгору/вниз) ----------
 const pArrow = $('pArrow');
