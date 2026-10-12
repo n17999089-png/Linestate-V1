@@ -452,6 +452,15 @@ path.cfade{animation:cfadeIn .6s ease both}
 /* вхід у гру: карта плавно з’являється */
 body.ingame #map{animation:mapIn .9s cubic-bezier(.2,.8,.2,1) both}
 @keyframes mapIn{from{opacity:0;transform:scale(1.02)}to{opacity:1;transform:none}}
+
+/* ---------- світла тема ---------- */
+body.light #panel,body.light #settings>div,body.light .mcard,body.light .lcard{background:#f5f5f7!important;color:#111!important;border-color:#c7c7cc!important;box-shadow:0 10px 30px rgba(0,0,0,.18)!important}
+body.light #panel *,body.light #settings *,body.light .mcard *,body.light .lcard *{color:#111}
+body.light .b3d{background:linear-gradient(#ffffff,#e5e5ea)!important;color:#111!important;border-color:#bbb!important}
+body.light .mcard h1,body.light .mtitle,body.light .lcard h2{color:#111!important;text-shadow:2px 2px 0 #fff!important}
+/* рекомендована мова (автодетект) */
+[data-lang].detected{box-shadow:0 0 0 2px rgba(255,255,255,.55),0 0 16px rgba(255,255,255,.25)}
+.spane .srow{margin-bottom:8px}
 /* ---------- логотип на заставці: поява, масштаб, блиск ---------- */
 #intro{flex-direction:column;gap:18px}
 #intro .ilogo{width:min(34vmin,220px);height:auto;display:block;filter:drop-shadow(0 10px 22px rgba(0,0,0,.7));animation:logoIn 1.1s cubic-bezier(.2,.9,.25,1.15) both,logoFloat 4.2s ease-in-out 1.1s infinite}
@@ -675,6 +684,8 @@ body.ingame #skyFx{display:none!important}
 <div class="srow"><span>Сіра зона</span><input type="color" id="colFight" value="#6b7280"></div>
 <div class="srow"><span>Беларусь</span><input type="color" id="colBy" value="#16a34a"></div>
 <div class="srow"><span>Щойно звільнені</span><input type="color" id="colGreen" value="#1e4fbc"></div>
+<div class="srow"><span>Прорисовка</span><input type="range" id="drawLod" min="-2" max="2" step="1" value="0"></div>
+<div class="srow"><span>Світла тема</span><input type="checkbox" id="lightTheme"></div>
 <div class="srow"><span>Скинути кольори</span><button class="b3d sm" id="colReset">Скинути</button></div>
 <div class="ssec">ПРОЗОРІСТЬ</div>
 <div class="srow"><span>Зони</span><input type="range" id="zoneOp" min="20" max="100" value="85"></div>
@@ -1499,9 +1510,11 @@ function cityInFour(n, lng, lat) {
   return v;
 }
 
+function drawLodVal() { try { return SET.drawLod || 0; } catch (e) { return 0; } }
 function renderCities() {
   if (!$('chkCity').checked) { clearCityMarkers(); return; }
-  const z = map.getZoom(), thr = cityThr(z), b = map.getBounds().pad(0.1);
+  const dl = drawLodVal();
+  const z = map.getZoom(), thr = cityThr(z) * Math.pow(2, -dl), b = map.getBounds().pad(0.1);
   const cfs = Math.max(7, Math.min(13, Math.round(7 + (z - 6) * 0.7)));
   const wantC = new Set();
   CITIES.forEach(([n, lng, lat, ua, pop, nm]) => {
@@ -1522,7 +1535,7 @@ function renderCities() {
   for (const [k, m] of cityMap) if (!wantC.has(k)) { cityMap.delete(k); const el = m.getElement && m.getElement(); if (el) el.classList.add('vout'); setTimeout(() => cityLayer.removeLayer(m), 240); }
 
   const wantV = new Set();
-  if (z >= 10) {
+  if (z >= 10 - dl) {
     const vfs = z >= 12 ? 8 : 6;
     let shown = 0;
     const cells = new Set(), CELL = z >= 10 ? 40 : 64;   // сітка: не більше одного села в клітинці екрана
@@ -1581,7 +1594,7 @@ $('map').appendChild(arrowCanvas);
 const actx = arrowCanvas.getContext('2d');
 let arrows = [], arrowRaf = 0, arrowLast = 0;
 function sizeArrowCanvas() {
-  const r = $('map').getBoundingClientRect(), d = Math.min(2, window.devicePixelRatio || 1);
+  const r = $('map').getBoundingClientRect(), d = 1;   // стрілки малюються в одиничній роздільній здатності — швидше
   arrowCanvas.width = Math.round(r.width * d); arrowCanvas.height = Math.round(r.height * d);
   actx.setTransform(d, 0, 0, d, 0, 0);
 }
@@ -1628,6 +1641,8 @@ function drawArrow(ar, now) {
   return true;
 }
 function arrowLoop(now) {
+  if (now - arrowLast < 33) { arrowRaf = arrows.length ? requestAnimationFrame(arrowLoop) : 0; return; }   // ~30 кадрів/с для стрілок
+  arrowLast = now;
   actx.clearRect(0, 0, arrowCanvas.width, arrowCanvas.height);
   arrows = arrows.filter(ar => drawArrow(ar, now));
   arrowRaf = arrows.length ? requestAnimationFrame(arrowLoop) : 0;
@@ -1640,6 +1655,7 @@ function zoneFamilyAt(p, st) {
   return zones.some(z => fam.indexOf(z.status) >= 0 && turf.booleanPointInPolygon(pt, z.f));
 }
 function showArrow(c, feat, st) {
+  if (SET.arrows === false) return;   // стрілки вимкнено в налаштуваннях — не малюємо й не рахуємо
   try {
     // вістря — в центрі захопленої території (де був противник), хвіст — з боку початку мазка
     const enemy = st === 'free' ? ['occ', 'fight'] : st === 'occ' ? ['free', 'green', 'fight'] : ['occ', 'free', 'green'];
@@ -1674,7 +1690,7 @@ function showArrow(c, feat, st) {
       const tail = [p[0] - dx * 0.08, p[1] - dy * 0.08];
       arrows.push({ sx: tail[0], sy: tail[1], ex: target[0], ey: target[1], color, t0: now + i * 120 });
     });
-    while (arrows.length > 16) arrows.shift();
+    while (arrows.length > 4) arrows.shift();   // не більше чотирьох стрілок одночасно — менше навантаження
     if (!arrowRaf) arrowRaf = requestAnimationFrame(arrowLoop);
     Sfx.arrow();
   } catch (err) { console.warn('arrow:', err.message); }
@@ -2302,7 +2318,7 @@ const _applyLang2 = applyLang;
 applyLang = function () { _applyLang2(); clearCityMarkers(); renderCities(); };
 
 // ---------- звуки: синтез WebAudio (без файлів), з фільтрами та шумом ----------
-const SET = { sound: true, vol: 0.6, colorFree: '#2563eb', colorOcc: '#dc2626', colorFight: '#6b7280', colorBy: '#16a34a', colorGreen: '#1e4fbc', arrows: true, grid: true, fx: true, zoneOpacity: 0.9, reliefOpacity: 0.85, blendRel: 'normal', blendZone: 'normal' };
+const SET = { sound: true, vol: 0.6, colorFree: '#2563eb', colorOcc: '#dc2626', colorFight: '#6b7280', colorBy: '#16a34a', colorGreen: '#1e4fbc', arrows: true, grid: true, fx: true, zoneOpacity: 0.9, reliefOpacity: 0.85, blendRel: 'normal', blendZone: 'normal', drawLod: 0, lightTheme: false };
 try { Object.assign(SET, JSON.parse(localStorage.getItem('fl_settings') || '{}')); } catch (e) {}
 let AC = null, NOISE = null;
 function ac() {
@@ -2397,6 +2413,7 @@ $('colOcc').oninput = e => { SET.colorOcc = e.target.value; applySideColors(); }
 $('colFight').oninput = e => { SET.colorFight = e.target.value; applySideColors(); };
 $('colBy').value = SET.colorBy || '#16a34a';
 $('colGreen').value = SET.colorGreen || '#1e4fbc';
+
 $('colGreen').oninput = e => { SET.colorGreen = e.target.value; applySideColors(); };
 $('colBy').oninput = e => { SET.colorBy = e.target.value; applySideColors(); };
 $('colReset').onclick = () => { SET.colorFree = '#2563eb'; SET.colorOcc = '#dc2626'; SET.colorFight = '#6b7280'; SET.colorBy = '#16a34a'; $('colBy').value = SET.colorBy;
@@ -2418,15 +2435,16 @@ applySideColors();
 const SAVE_KEY = 'fl_save';
 function saveGame() {
   const run = () => {
+    if (window._noSave) return;
     try {
       const data = zones.filter(z => z.status !== 'rf' && z.status !== 'by').map(z => ({ s: z.status, g: z.f.geometry }));
-      localStorage.setItem(SAVE_KEY, JSON.stringify({ t: Date.now(), zones: data }));
+      localStorage.setItem(SAVE_KEY, JSON.stringify({ t: Date.now(), k: window._curDs || 'real', zones: data }));
     } catch (e) { /* місця може не вистачити */ }
   };
   (window.requestIdleCallback ? requestIdleCallback : (f => setTimeout(f, 1)))(run, { timeout: 4000 });
 }
 let saveT = 0;
-function scheduleSave() { clearTimeout(saveT); saveT = setTimeout(saveGame, 2500); }
+function scheduleSave() { if (window._noSave) return; clearTimeout(saveT); saveT = setTimeout(saveGame, 2500); }
 function hasSave() { return !!localStorage.getItem(SAVE_KEY); }
 function loadGame() {
   try {
@@ -2435,6 +2453,7 @@ function loadGame() {
     addZone('rf', RU_GEO, true);      // статичні території відновлюються зі старту, не зі збереження
     addZone('by', BY_GEO, true);
     d.zones.forEach(x => addZone(x.s, x.g, true));
+    window._curDs = d.k || 'real';
     undoS = []; redoS = []; endStroke(); afterChange();
     return true;
   } catch (e) { return false; }
@@ -3111,7 +3130,7 @@ startWith = function (ds) {
 };
 // попередній розрахунок «Реальний фронт» під час вибору мови (у фоні, без зайвих кадрів)
 document.querySelectorAll('[data-lang]').forEach(btn => btn.addEventListener('click', () => {
-  setTimeout(() => { if (!ZCACHE.real) { try { _startWithBase('real'); ZCACHE.real = snap(); } catch (e) {} } }, 900);
+  setTimeout(() => { if (!ZCACHE.real) { try { window._noSave = true; _startWithBase('real'); ZCACHE.real = snap(); } catch (e) {} finally { window._noSave = false; } } }, 900);
 }));
 
 // ---------- сценарій «Березень 2022»: територія на 15 березня 2022 ----------
@@ -3173,10 +3192,64 @@ function fillGapsGray() {
 }
 const _startWithGaps = startWith;
 startWith = function (ds) {
+  window._curDs = ds === true ? 'real' : (ds || 'real');
   const r = _startWithGaps(ds);
   fillGapsGray();
   return r;
 };
+
+// ---------- налаштування прорисовки і світла тема (після завантаження налаштувань) ----------
+$('drawLod').value = SET.drawLod || 0;
+$('drawLod').oninput = e => { SET.drawLod = +e.target.value; saveSettings(); if (window.renderCities) renderCities(); };
+$('lightTheme').checked = !!SET.lightTheme;
+document.body.classList.toggle('light', !!SET.lightTheme);
+$('lightTheme').onchange = e => { SET.lightTheme = e.target.checked; document.body.classList.toggle('light', e.target.checked); saveSettings(); };
+
+// ---------- налаштування: розділи, зум, мова з автодетектом ----------
+(function settingsSections() {
+  const card = document.querySelector('#settings > div');
+  if (!card) return;
+  // зум: швидкість колеса (менше пікселів на рівень — швидший зум)
+  const zoomRow = document.createElement('div'); zoomRow.className = 'srow';
+  zoomRow.innerHTML = '<span>Швидкість зуму</span><input type="range" id="zoomSpeed" min="1" max="3" step="1" value="2">';
+  const langRow = document.createElement('div'); langRow.className = 'srow';
+  langRow.innerHTML = '<span>Мова</span><select id="langSel"><option value="auto">Авто</option><option value="uk">UK</option><option value="ru">RU</option><option value="en">EN</option></select>';
+  const optRow = document.createElement('div'); optRow.className = 'srow';
+  optRow.innerHTML = '<span>Стрілки атаки</span><input type="checkbox" id="chkArrOpt">';
+  card.appendChild(zoomRow); card.appendChild(langRow); card.appendChild(optRow);
+
+
+  // значення з налаштувань і їх застосування
+  const zs = document.getElementById('zoomSpeed');
+  zs.value = SET.zoomSpeed || 2;
+  const applyZoom = v => { map.options.wheelPxPerZoomLevel = [170, 110, 70][v - 1] || 110; };
+  zs.oninput = e => { SET.zoomSpeed = +e.target.value; applyZoom(SET.zoomSpeed); saveSettings(); };
+  applyZoom(SET.zoomSpeed || 2);
+
+  const arrOpt = document.getElementById('chkArrOpt'), arrOld = document.getElementById('chkArr');
+  arrOpt.checked = SET.arrows !== false;
+  arrOpt.onchange = () => { SET.arrows = arrOpt.checked; if (arrOld) arrOld.checked = arrOpt.checked; saveSettings(); };
+  if (arrOld) arrOld.onchange = () => { SET.arrows = arrOld.checked; arrOpt.checked = arrOld.checked; saveSettings(); };
+
+  const ls = document.getElementById('langSel');
+  ls.value = SET.langMode || 'auto';
+  ls.onchange = () => {
+    SET.langMode = ls.value;
+    LANG = ls.value === 'auto' ? detectLang() : ls.value;
+    applyLang(); saveSettings();
+  };
+})();
+
+// автодетект мови браузера; позначаємо рекомендовану кнопку на екрані вибору
+function detectLang() {
+  const n = ((navigator.language || navigator.userLanguage || 'uk') + '').slice(0, 2).toLowerCase();
+  return n === 'ru' ? 'ru' : n === 'en' ? 'en' : 'uk';
+}
+(function markDetectedLang() {
+  const d = detectLang();
+  const b = document.querySelector('[data-lang="' + d + '"]');
+  if (SET.langMode && SET.langMode !== 'auto') LANG = SET.langMode;
+})();
 
 // ---------- сховати / показати панель: стрілка-вкладка збоку (на телефоні — шторка знизу) ----------
 const chevEl = document.getElementById('pChev');
